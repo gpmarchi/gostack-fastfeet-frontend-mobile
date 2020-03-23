@@ -1,18 +1,33 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { Image } from 'react-native';
 import PropTypes from 'prop-types';
 
-// import { Container } from './styles';
+import {
+  Container,
+  Form,
+  Input,
+  SubmitButton,
+  SubmitButtonText,
+} from './styles';
+
+import logo from '~/assets/logo.png';
 
 export default function SignIn({ navigation }) {
   return (
-    <View>
-      <Text>SignIn</Text>
-      <Button
-        title="To Dashboard"
-        onPress={() => navigation.navigate('Dashboard')}
-      />
-    </View>
+    <Container>
+      <Image source={logo} height={48} width={244} />
+      <Form>
+        <Input
+          keyboardType="email-address"
+          autoCorrect={false}
+          autoCapitalize="none"
+          placeholder="Informe seu ID de cadastro"
+        />
+        <SubmitButton onPress={() => navigation.navigate('Dashboard')}>
+          <SubmitButtonText>Entrar no sistema</SubmitButtonText>
+        </SubmitButton>
+      </Form>
+    </Container>
   );
 }
 
