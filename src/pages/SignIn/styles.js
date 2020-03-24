@@ -21,7 +21,6 @@ export const Form = styled.View`
 export const Input = styled.TextInput`
   background: #fff;
   border-radius: 4px;
-  border: 1px solid #ddd;
   font-size: 16px;
   color: #999;
   margin-bottom: 10px;
