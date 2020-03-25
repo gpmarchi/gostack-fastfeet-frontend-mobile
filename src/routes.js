@@ -6,9 +6,23 @@ import { useSelector } from 'react-redux';
 
 import SignIn from '~/pages/SignIn';
 import Dashboard from '~/pages/Dashboard';
+import Profile from '~/pages/Profile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const tabBarOptions = {
+  keyboardHidesTabBar: true,
+  activeTintColor: '#7D40E7',
+  inactiveTintColor: '#999',
+  labelStyle: {
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  style: {
+    height: 70,
+  },
+};
 
 export default function Routes() {
   const signed = useSelector((state) => state.auth.signed);
@@ -16,8 +30,17 @@ export default function Routes() {
   return (
     <NavigationContainer>
       {signed ? (
-        <Tab.Navigator>
-          <Tab.Screen name="Dashboard" component={Dashboard} />
+        <Tab.Navigator tabBarOptions={tabBarOptions}>
+          <Tab.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={Dashboard.navigationOptions}
+          />
+          <Tab.Screen
+            name="Profile"
+            component={Profile}
+            options={Profile.navigationOptions}
+          />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator

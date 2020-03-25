@@ -6,18 +6,18 @@ import Background from '~/components/Bakcground';
 
 // import { Container } from './styles';
 
-export default function Dashboard() {
+export default function Profile() {
   return (
     <Background>
-      <Text>Dashboard</Text>
+      <Text>Profile</Text>
     </Background>
   );
 }
 
-Dashboard.navigationOptions = {
-  tabBarLabel: 'Entregas',
+Profile.navigationOptions = {
+  tabBarLabel: 'Meu perfil',
   // eslint-disable-next-line react/prop-types
   tabBarIcon: ({ color, size }) => {
-    return <Icon name="view-headline" size={size} color={color} />;
+    return <Icon name="account-circle" size={size} color={color} />;
   },
 };
