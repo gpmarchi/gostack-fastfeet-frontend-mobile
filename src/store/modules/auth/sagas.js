@@ -13,8 +13,6 @@ export function* signIn({ payload }) {
     const deliveryman = response.data;
 
     yield put(signInSuccess(deliveryman));
-
-    // history.push('/parcels');
   } catch (error) {
     yield put(signInFailure());
 
@@ -25,11 +23,4 @@ export function* signIn({ payload }) {
   }
 }
 
-export function signOut() {
-  // history.push('/');
-}
-
-export default all([
-  takeLatest('@auth/SIGN_IN_REQUEST', signIn),
-  takeLatest('@auth/SIGN_OUT', signOut),
-]);
+export default all([takeLatest('@auth/SIGN_IN_REQUEST', signIn)]);
