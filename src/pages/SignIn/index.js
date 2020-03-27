@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Image, ActivityIndicator } from 'react-native';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { signInRequest } from '~/store/modules/auth/actions';
@@ -15,7 +14,7 @@ import {
 
 import logo from '~/assets/logo.png';
 
-export default function SignIn({ navigation }) {
+export default function SignIn() {
   const [deliverymanId, setDeliverymanId] = useState('');
 
   const dispatch = useDispatch();
@@ -48,7 +47,3 @@ export default function SignIn({ navigation }) {
     </Container>
   );
 }
-
-SignIn.propTypes = {
-  navigation: PropTypes.shape().isRequired,
-};
