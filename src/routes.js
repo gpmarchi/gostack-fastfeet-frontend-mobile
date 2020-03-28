@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
 
 import SignIn from '~/pages/SignIn';
-import Dashboard from '~/pages/Dashboard';
+import ManageDeliveries from '~/pages/ManageDeliveries';
 import Profile from '~/pages/Profile';
 
 const Stack = createStackNavigator();
@@ -32,9 +32,9 @@ export default function Routes() {
       {signed ? (
         <Tab.Navigator tabBarOptions={tabBarOptions}>
           <Tab.Screen
-            name="Dashboard"
-            component={Dashboard}
-            options={Dashboard.navigationOptions}
+            name="ManageDeliveries"
+            component={ManageDeliveries}
+            options={ManageDeliveries.navigationOptions}
           />
           <Tab.Screen
             name="Profile"
