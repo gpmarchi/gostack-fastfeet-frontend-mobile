@@ -63,14 +63,20 @@ export const FilterLinks = styled.View`
   justify-content: space-between;
 `;
 
-export const FilterLink = styled.TouchableOpacity``;
+export const FilterLink = styled.TouchableOpacity`
+  border-bottom-width: ${(props) => (props.isActiveFilter ? '1px' : 0)};
+  border-bottom-color: ${(props) => (props.isActiveFilter ? '#7D40E7' : 0)};
+`;
 
 export const FilterLinkText = styled.Text`
   font-size: 12px;
   font-weight: bold;
+  color: ${(props) => (props.isActiveFilter ? '#7D40E7' : '#999')};
 `;
 
-export const Deliveries = styled.View`
+export const Deliveries = styled.FlatList.attrs({
+  showsVerticalScrollIndicator: false,
+})`
   margin-top: 10px;
 `;
 
@@ -83,8 +89,16 @@ export const Delivery = styled.View`
 export const Product = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   padding: 15px;
 `;
+
+export const ProductInfo = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const Withdrawal = styled.TouchableOpacity``;
 
 export const Description = styled.Text`
   margin-left: 10px;
