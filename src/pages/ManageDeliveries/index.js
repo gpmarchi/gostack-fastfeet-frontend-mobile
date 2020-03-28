@@ -8,11 +8,14 @@ import DeliveryDetails from '~/pages/DeliveryDetails';
 const ManageDeliveriesStack = createStackNavigator();
 
 const navigatorScreenOptions = {
-  headerTransparent: true,
-  headerTintColor: '#444',
+  headerTintColor: '#fff',
   headerTitleAlign: 'center',
   headerLeftContainerStyle: {
     marginLeft: 20,
+  },
+  headerStyle: {
+    backgroundColor: '#7D40E7',
+    elevation: 0,
   },
 };
 

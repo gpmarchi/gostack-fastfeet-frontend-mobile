@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
 import { format, parseISO } from 'date-fns';
-import { Alert } from 'react-native';
+import { Alert, StatusBar } from 'react-native';
 
 import api from '~/services/api';
 import { signOut } from '~/store/modules/auth/actions';
@@ -113,6 +113,7 @@ export default function Dashboard({ navigation }) {
 
   return (
     <Background>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <Container>
         <Header>
           <HeaderInfo>
@@ -217,5 +218,6 @@ export default function Dashboard({ navigation }) {
 }
 
 Dashboard.navigationOptions = () => ({
-  title: '',
+  headerMode: 'none',
+  headerShown: false,
 });
