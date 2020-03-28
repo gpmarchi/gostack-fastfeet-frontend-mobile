@@ -98,12 +98,25 @@ export const Status = styled.View``;
 export const DeliverySteps = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding: 0 25px 20px;
+  align-items: center;
+  padding: 0 52px;
   margin-top: 10px;
+`;
+
+export const Steps = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
 `;
 
 export const Step = styled.View`
   align-items: center;
+`;
+
+export const Line = styled.View`
+  border: 1px solid #7d40e7;
+  width: 118px;
 `;
 
 export const StepText = styled.Text`
@@ -117,22 +130,24 @@ export const StepText = styled.Text`
 export const Waiting = styled.View`
   width: 10px;
   height: 10px;
-  border: 1px solid #7d40e7;
   border-radius: 5px;
+  background: #7d40e7;
 `;
 
 export const Withdrawn = styled.View`
   width: 10px;
   height: 10px;
-  border: 1px solid #7d40e7;
+  border: ${(props) => (props.isComplete ? 'none' : '1px solid #7d40e7')};
   border-radius: 5px;
+  background: ${(props) => (props.isComplete ? '#7d40e7' : '#fff')};
 `;
 
 export const Delivered = styled.View`
   width: 10px;
   height: 10px;
-  border: 1px solid #7d40e7;
+  border: ${(props) => (props.isComplete ? 'none' : '1px solid #7d40e7')};
   border-radius: 5px;
+  background: ${(props) => (props.isComplete ? '#7d40e7' : '#fff')};
 `;
 
 export const StatusDetails = styled.View`
@@ -141,14 +156,27 @@ export const StatusDetails = styled.View`
   justify-content: space-between;
   padding: 20px;
   background: #f8f9fd;
+  margin-top: 20px;
 `;
 
 export const Info = styled.View``;
 
-export const InfoTitle = styled.Text``;
+export const InfoTitle = styled.Text`
+  font-size: 9px;
+  font-weight: bold;
+  color: #999;
+`;
 
-export const Content = styled.Text``;
+export const Content = styled.Text`
+  font-size: 12px;
+  font-weight: bold;
+  color: #444;
+`;
 
 export const DetailsLink = styled.TouchableOpacity``;
 
-export const DetailsLinkText = styled.Text``;
+export const DetailsLinkText = styled.Text`
+  font-size: 12px;
+  font-weight: bold;
+  color: #7d40e7;
+`;

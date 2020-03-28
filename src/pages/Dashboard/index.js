@@ -1,6 +1,5 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Button } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import Background from '~/components/Background';
@@ -25,7 +24,9 @@ import {
   Description,
   Status,
   DeliverySteps,
+  Steps,
   Step,
+  Line,
   StepText,
   Waiting,
   Withdrawn,
@@ -81,19 +82,23 @@ export default function Dashboard({ navigation }) {
             </Product>
             <Status>
               <DeliverySteps>
+                <Waiting />
+                <Line />
+                <Withdrawn isComplete />
+                <Line />
+                <Delivered />
+              </DeliverySteps>
+              <Steps>
                 <Step>
-                  <Waiting />
                   <StepText>Aguardando Retirada</StepText>
                 </Step>
                 <Step>
-                  <Withdrawn />
                   <StepText>Retirada</StepText>
                 </Step>
                 <Step>
-                  <Delivered />
                   <StepText>Entregue</StepText>
                 </Step>
-              </DeliverySteps>
+              </Steps>
               <StatusDetails>
                 <Info>
                   <InfoTitle>Data</InfoTitle>
@@ -103,17 +108,56 @@ export default function Dashboard({ navigation }) {
                   <InfoTitle>Cidade</InfoTitle>
                   <Content>Diadema</Content>
                 </Info>
-                <DetailsLink>
+                <DetailsLink
+                  onPress={() => navigation.navigate('DeliveryDetails')}
+                >
+                  <DetailsLinkText>Ver detalhes</DetailsLinkText>
+                </DetailsLink>
+              </StatusDetails>
+            </Status>
+          </Delivery>
+          <Delivery>
+            <Product>
+              <Icon name="truck-fast" size={30} color="#7D40E7" />
+              <Description>Encomenda 01</Description>
+            </Product>
+            <Status>
+              <DeliverySteps>
+                <Waiting />
+                <Line />
+                <Withdrawn />
+                <Line />
+                <Delivered />
+              </DeliverySteps>
+              <Steps>
+                <Step>
+                  <StepText>Aguardando Retirada</StepText>
+                </Step>
+                <Step>
+                  <StepText>Retirada</StepText>
+                </Step>
+                <Step>
+                  <StepText>Entregue</StepText>
+                </Step>
+              </Steps>
+              <StatusDetails>
+                <Info>
+                  <InfoTitle>Data</InfoTitle>
+                  <Content>15/01/2020</Content>
+                </Info>
+                <Info>
+                  <InfoTitle>Cidade</InfoTitle>
+                  <Content>Diadema</Content>
+                </Info>
+                <DetailsLink
+                  onPress={() => navigation.navigate('DeliveryDetails')}
+                >
                   <DetailsLinkText>Ver detalhes</DetailsLinkText>
                 </DetailsLink>
               </StatusDetails>
             </Status>
           </Delivery>
         </Deliveries>
-        <Button
-          title="teste"
-          onPress={() => navigation.navigate('DeliveryDetails')}
-        />
       </Container>
     </Background>
   );
