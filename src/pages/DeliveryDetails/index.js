@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import PropTypes from 'prop-types';
+import { format, parseISO } from 'date-fns';
 
+import { deliveryStatus } from '~/util/helper';
 import Background from '~/components/Background';
 
 import {
@@ -13,10 +16,48 @@ import {
   InfoTitle,
   Info,
   Status,
-  DeliveryDates,
+  Dates,
+  WithdrawalDate,
+  DeliveryDate,
+  Actions,
+  Action,
+  ActionText,
 } from './styles';
 
-export default function DeliveryDetails() {
+export default function DeliveryDetails({ navigation, route }) {
+  const [delivery, setDelivery] = useState(route.params?.delivery);
+
+  const withdrawalDateFormatted = useMemo(
+    () =>
+      delivery.start_date
+        ? format(parseISO(delivery.start_date), 'dd/MM/yyyy')
+        : '--/--/--',
+    [delivery]
+  );
+
+  const deliveryDateFormatted = useMemo(
+    () =>
+      delivery.end_date
+        ? format(parseISO(delivery.end_date), 'dd/MM/yyyy')
+        : '--/--/--',
+    [delivery]
+  );
+
+  const status = useMemo(() => deliveryStatus(delivery), [delivery]);
+
+  useEffect(() => {
+    const { street, number, city, state, zipcode } = delivery.recipient;
+
+    const data = {
+      ...delivery,
+      address: `${street}, ${number}, ${city} - ${state}, ${zipcode}`,
+      withdrawalDateFormatted,
+      deliveryDateFormatted,
+      status,
+    };
+    setDelivery(data);
+  }, []);
+
   return (
     <Background>
       <StatusBar barStyle="light-content" backgroundColor="#7d40e7" />
@@ -28,21 +69,44 @@ export default function DeliveryDetails() {
             <TitleText>Informações da entrega</TitleText>
           </Title>
           <InfoTitle>DESTINATÁRIO</InfoTitle>
-          <Info>Ludwig Van Beethoven</Info>
+          <Info>{delivery.recipient.name}</Info>
           <InfoTitle>ENDEREÇO DE ENTREGA</InfoTitle>
-          <Info>Rua Beethoven, 1729, Diadema - SP, 09960-580</Info>
+          <Info>{delivery.address}</Info>
           <InfoTitle>PRODUTO</InfoTitle>
-          <Info>Yamaha SX7</Info>
+          <Info>{delivery.product}</Info>
         </Delivery>
         <Status>
           <Title>
-            <Icon name="truck-fast" size={30} color="#7D40E7" />
+            <Icon name="calendar" size={30} color="#7D40E7" />
             <TitleText>Situação da entrega</TitleText>
           </Title>
           <InfoTitle>STATUS</InfoTitle>
-          <Info>Pendente</Info>
-          <DeliveryDates />
+          <Info>{status}</Info>
+          <Dates>
+            <WithdrawalDate>
+              <InfoTitle>DATA DE RETIRADA</InfoTitle>
+              <Info>{withdrawalDateFormatted}</Info>
+            </WithdrawalDate>
+            <DeliveryDate>
+              <InfoTitle>DATA DE ENTREGA</InfoTitle>
+              <Info>{deliveryDateFormatted}</Info>
+            </DeliveryDate>
+          </Dates>
         </Status>
+        <Actions>
+          <Action>
+            <Icon name="close-circle-outline" size={30} color="#E74040" />
+            <ActionText>Informar Problema</ActionText>
+          </Action>
+          <Action>
+            <Icon name="information-outline" size={30} color="#E7BA40" />
+            <ActionText>Visualizar Problemas</ActionText>
+          </Action>
+          <Action last>
+            <Icon name="check-circle-outline" size={30} color="#7D40E7" />
+            <ActionText>Confirmar Entrega</ActionText>
+          </Action>
+        </Actions>
       </Container>
     </Background>
   );
@@ -56,3 +120,8 @@ DeliveryDetails.navigationOptions = ({ navigation }) => ({
     </TouchableOpacity>
   ),
 });
+
+DeliveryDetails.propTypes = {
+  navigation: PropTypes.shape().isRequired,
+  route: PropTypes.shape().isRequired,
+};

@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
 import { format, parseISO } from 'date-fns';
 import { Alert, StatusBar } from 'react-native';
+import PropTypes from 'prop-types';
 
 import api from '~/services/api';
 import { signOut } from '~/store/modules/auth/actions';
@@ -111,6 +112,10 @@ export default function Dashboard({ navigation }) {
     setFilter(activeFilter);
   }
 
+  function handleDeliveryDetails(delivery) {
+    navigation.navigate('DeliveryDetails', { delivery });
+  }
+
   return (
     <Background>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
@@ -202,9 +207,7 @@ export default function Dashboard({ navigation }) {
                     <InfoTitle>Cidade</InfoTitle>
                     <Content>{item.recipient.city}</Content>
                   </Info>
-                  <DetailsLink
-                    onPress={() => navigation.navigate('DeliveryDetails')}
-                  >
+                  <DetailsLink onPress={() => handleDeliveryDetails(item)}>
                     <DetailsLinkText>Ver detalhes</DetailsLinkText>
                   </DetailsLink>
                 </StatusDetails>
@@ -221,3 +224,7 @@ Dashboard.navigationOptions = () => ({
   headerMode: 'none',
   headerShown: false,
 });
+
+Dashboard.propTypes = {
+  navigation: PropTypes.shape().isRequired,
+};

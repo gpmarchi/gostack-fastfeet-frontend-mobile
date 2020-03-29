@@ -51,4 +51,39 @@ export const Status = styled.View`
   margin-bottom: 10px;
 `;
 
-export const DeliveryDates = styled.View``;
+export const Dates = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const WithdrawalDate = styled.View``;
+
+export const DeliveryDate = styled.View``;
+
+export const Actions = styled.View`
+  flex-direction: row;
+  background: #f8f9fd;
+  height: 83px;
+  border: 1px solid #0000001a;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const Action = styled.TouchableOpacity`
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 33.333%;
+  align-self: stretch;
+  border-right-width: ${(props) => (props.last ? 0 : '1px')};
+  border-right-color: ${(props) => (props.last ? 'transparent' : '#0000001a')};
+`;
+
+export const ActionText = styled.Text`
+  font-size: 12px;
+  color: #999;
+  width: 65px;
+  text-align: center;
+`;
