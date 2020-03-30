@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import PropTypes from 'prop-types';
 
+import api from '~/services/api';
 import Background from '~/components/Background';
 
 import {
@@ -12,14 +14,23 @@ import {
   SubmitButtonText,
 } from './styles';
 
-export default function NotifyProblem() {
+export default function NotifyProblem({ navigation, route }) {
+  const parcel_id = route.params?.parcel_id;
+
+  const [problem, setProblem] = useState('');
+
+  async function handleAddProblem() {
+    await api.post(`/delivery/${parcel_id}/problems`, { description: problem });
+    navigation.goBack();
+  }
+
   return (
     <Background>
       <StatusBar barStyle="light-content" backgroundColor="#7d40e7" />
       <Strip />
       <Container>
-        <ProblemInput />
-        <SubmitButton>
+        <ProblemInput onChangeText={(text) => setProblem(text)} />
+        <SubmitButton onPress={handleAddProblem}>
           <SubmitButtonText>Enviar</SubmitButtonText>
         </SubmitButton>
       </Container>
@@ -35,3 +46,8 @@ NotifyProblem.navigationOptions = ({ navigation }) => ({
     </TouchableOpacity>
   ),
 });
+
+NotifyProblem.propTypes = {
+  navigation: PropTypes.shape().isRequired,
+  route: PropTypes.shape().isRequired,
+};
