@@ -3,6 +3,7 @@ import { TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
 import { format, parseISO } from 'date-fns';
+import { useSelector } from 'react-redux';
 
 import { deliveryStatus } from '~/util/helper';
 import Background from '~/components/Background';
@@ -25,6 +26,8 @@ import {
 } from './styles';
 
 export default function DeliveryDetails({ navigation, route }) {
+  const deliveryman = useSelector((state) => state.auth.deliveryman);
+
   const [delivery, setDelivery] = useState(route.params?.delivery);
 
   const withdrawalDateFormatted = useMemo(
@@ -94,15 +97,33 @@ export default function DeliveryDetails({ navigation, route }) {
           </Dates>
         </Status>
         <Actions>
-          <Action>
+          <Action
+            onPress={() =>
+              navigation.navigate('NotifyProblem', { parcel_id: delivery.id })
+            }
+          >
             <Icon name="close-circle-outline" size={30} color="#E74040" />
             <ActionText>Informar Problema</ActionText>
           </Action>
-          <Action>
+          <Action
+            onPress={() =>
+              navigation.navigate('VisualizeProblems', {
+                parcel_id: delivery.id,
+              })
+            }
+          >
             <Icon name="information-outline" size={30} color="#E7BA40" />
             <ActionText>Visualizar Problemas</ActionText>
           </Action>
-          <Action last>
+          <Action
+            last
+            onPress={() =>
+              navigation.navigate('ConfirmDelivery', {
+                deliveryman_id: deliveryman.id,
+                parcel_id: delivery.id,
+              })
+            }
+          >
             <Icon name="check-circle-outline" size={30} color="#7D40E7" />
             <ActionText>Confirmar Entrega</ActionText>
           </Action>

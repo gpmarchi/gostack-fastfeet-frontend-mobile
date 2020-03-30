@@ -4,6 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Dashboard from '~/pages/Dashboard';
 import DeliveryDetails from '~/pages/DeliveryDetails';
+import NotifyProblem from '~/pages/NotifyProblem';
+import VisualizeProblems from '~/pages/VisualizeProblems';
+import ConfirmDelivery from '~/pages/ConfirmDelivery';
 
 const ManageDeliveriesStack = createStackNavigator();
 
@@ -31,6 +34,21 @@ export default function ManageDeliveriesStackScreen() {
         name="DeliveryDetails"
         component={DeliveryDetails}
         options={DeliveryDetails.navigationOptions}
+      />
+      <ManageDeliveriesStack.Screen
+        name="NotifyProblem"
+        component={NotifyProblem}
+        options={NotifyProblem.navigationOptions}
+      />
+      <ManageDeliveriesStack.Screen
+        name="VisualizeProblems"
+        component={VisualizeProblems}
+        options={VisualizeProblems.navigationOptions}
+      />
+      <ManageDeliveriesStack.Screen
+        name="ConfirmDelivery"
+        component={ConfirmDelivery}
+        options={ConfirmDelivery.navigationOptions}
       />
     </ManageDeliveriesStack.Navigator>
   );
