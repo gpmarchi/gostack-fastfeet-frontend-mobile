@@ -33,7 +33,10 @@ export const Welcome = styled.Text`
   color: #666;
 `;
 
-export const Name = styled.Text`
+export const Name = styled.Text.attrs({
+  numberOfLines: 1,
+})`
+  max-width: 240px;
   font-size: 22px;
   font-weight: bold;
   color: #444;
