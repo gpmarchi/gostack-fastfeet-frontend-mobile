@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import PropTypes from 'prop-types';
+import { parseISO, format } from 'date-fns';
 
+import api from '~/services/api';
 import Background from '~/components/Background';
 
 import {
@@ -14,22 +17,39 @@ import {
   OccurenceDate,
 } from './styles';
 
-export default function VisualizeProblems() {
+export default function VisualizeProblems({ route }) {
+  const delivery = route.params?.delivery;
+
+  const [problems, setProblems] = useState([]);
+
+  useEffect(() => {
+    async function loadProblems() {
+      const response = await api.get(`/delivery/${delivery.id}/problems`);
+
+      const data = response.data.map((problem) => ({
+        ...problem,
+        createdAtFormatted: format(parseISO(problem.createdAt), 'dd/MM/yyyy'),
+      }));
+
+      setProblems(data);
+    }
+
+    loadProblems();
+  }, []);
+
   return (
     <Background>
       <StatusBar barStyle="light-content" backgroundColor="#7d40e7" />
       <Strip />
       <Container>
-        <Product>Produto</Product>
+        <Product>{delivery.product}</Product>
         <Problems>
-          <Problem>
-            <Occurence>Destinatário ausente</Occurence>
-            <OccurenceDate>14/01/2020</OccurenceDate>
-          </Problem>
-          <Problem>
-            <Occurence>Destinatário ausente</Occurence>
-            <OccurenceDate>15/01/2020</OccurenceDate>
-          </Problem>
+          {problems.map((problem) => (
+            <Problem key={problem.id}>
+              <Occurence>{problem.description}</Occurence>
+              <OccurenceDate>{problem.createdAtFormatted}</OccurenceDate>
+            </Problem>
+          ))}
         </Problems>
       </Container>
     </Background>
@@ -44,3 +64,7 @@ VisualizeProblems.navigationOptions = ({ navigation }) => ({
     </TouchableOpacity>
   ),
 });
+
+VisualizeProblems.propTypes = {
+  route: PropTypes.shape().isRequired,
+};

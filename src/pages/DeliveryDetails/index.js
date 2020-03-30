@@ -108,7 +108,7 @@ export default function DeliveryDetails({ navigation, route }) {
           <Action
             onPress={() =>
               navigation.navigate('VisualizeProblems', {
-                parcel_id: delivery.id,
+                delivery,
               })
             }
           >

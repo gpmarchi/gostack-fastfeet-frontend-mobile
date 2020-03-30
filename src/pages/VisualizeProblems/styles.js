@@ -34,6 +34,7 @@ export const Problem = styled.View`
 export const Occurence = styled.Text`
   font-size: 16px;
   color: #999;
+  max-width: 250px;
 `;
 
 export const OccurenceDate = styled.Text`
