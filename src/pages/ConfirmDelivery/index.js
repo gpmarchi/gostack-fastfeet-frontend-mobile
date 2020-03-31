@@ -10,6 +10,7 @@ import {
   Strip,
   Signature,
   Camera,
+  CancelPreview,
   TakePicture,
   Preview,
   Snap,
@@ -20,15 +21,26 @@ import {
 export default function ConfirmDelivery() {
   let camera;
 
-  const [preview, setPreview] = useState('');
+  const [preview, setPreview] = useState(false);
 
   async function handleTakePicture() {
     if (camera) {
+      setPreview(true);
       // const options = { quality: 0.5, base64: true };
-      const data = await camera.takePictureAsync();
+      const options = {
+        quality: 0.5,
+        orientation: 'auto',
+        fixOrientation: true,
+        pauseAfterCapture: true,
+      };
+      const data = await camera.takePictureAsync(options);
       console.tron.log(data);
-      setPreview(data.uri);
     }
+  }
+
+  function handleCancelPreview() {
+    setPreview(false);
+    camera.resumePreview();
   }
 
   function handleConfirmDelivery() {}
@@ -39,36 +51,32 @@ export default function ConfirmDelivery() {
       <Strip />
       <Container>
         <Signature>
-          {!preview ? (
-            <>
-              <Camera
-                ref={(ref) => {
-                  camera = ref;
-                }}
-                captureAudio={false}
-                type={RNCamera.Constants.Type.back}
-                flashMode={RNCamera.Constants.FlashMode.auto}
-                autoFocus={RNCamera.Constants.AutoFocus.on}
-                androidCameraPermissionOptions={{
-                  title: 'Permission to use camera',
-                  message: 'We need your permission to use your camera',
-                  buttonPositive: 'Ok',
-                  buttonNegative: 'Cancel',
-                }}
-              />
-              <TakePicture>
-                <Snap onPress={handleTakePicture}>
-                  <Icon name="camera" size={40} color="#fff" />
-                </Snap>
-              </TakePicture>
-            </>
-          ) : (
-            <Preview
-              source={{
-                uri: preview,
-              }}
-            />
-          )}
+          <Camera
+            ref={(ref) => {
+              camera = ref;
+            }}
+            captureAudio={false}
+            type={RNCamera.Constants.Type.back}
+            flashMode={RNCamera.Constants.FlashMode.auto}
+            autoFocus={RNCamera.Constants.AutoFocus.on}
+            androidCameraPermissionOptions={{
+              title: 'Permission to use camera',
+              message: 'We need your permission to use your camera',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
+          />
+          <TakePicture>
+            {!preview ? (
+              <Snap onPress={handleTakePicture}>
+                <Icon name="camera" size={40} color="#fff" />
+              </Snap>
+            ) : (
+              <Preview onPress={handleCancelPreview}>
+                <Icon name="close" size={40} color="#fff" />
+              </Preview>
+            )}
+          </TakePicture>
         </Signature>
         <SubmitButton onPress={handleConfirmDelivery}>
           <SubmitButtonText>Enviar</SubmitButtonText>

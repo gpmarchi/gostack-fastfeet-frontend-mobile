@@ -24,7 +24,6 @@ export const Camera = styled(RNCamera)`
   margin-top: 197px;
   height: 100px;
   width: 372px;
-  border-radius: 4px;
 `;
 
 export const TakePicture = styled.View`
@@ -32,8 +31,14 @@ export const TakePicture = styled.View`
   padding: 20px 0;
 `;
 
-export const Preview = styled.Image`
-  flex: 1;
+export const Preview = styled.TouchableOpacity`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: #0000004d;
+  border-radius: 40px;
+  width: 80px;
+  height: 80px;
 `;
 
 export const Snap = styled.TouchableOpacity`
