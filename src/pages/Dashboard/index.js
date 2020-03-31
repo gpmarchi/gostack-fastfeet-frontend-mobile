@@ -54,6 +54,7 @@ export default function Dashboard({ navigation }) {
   const [filter, setFilter] = useState('pending');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const deliveryman = useSelector((state) => state.auth.deliveryman);
 
@@ -70,6 +71,7 @@ export default function Dashboard({ navigation }) {
 
     setDeliveries(page >= 2 ? [...deliveries, ...data] : data);
     setLoading(false);
+    setRefreshing(false);
   }, [deliveryman.id, filter, page]);
 
   useEffect(() => {
@@ -78,6 +80,15 @@ export default function Dashboard({ navigation }) {
 
   function loadMoreDeliveries() {
     setPage(page + 1);
+  }
+
+  function refreshList() {
+    setLoading(true);
+    setRefreshing(true);
+    setFilter('pending');
+    setPage(1);
+    setDeliveries([]);
+    loadDeliveries();
   }
 
   function handleSignout() {
@@ -174,6 +185,8 @@ export default function Dashboard({ navigation }) {
         ) : (
           <Deliveries
             data={deliveries}
+            onRefresh={refreshList}
+            refreshing={refreshing}
             onEndReachedThreshold={0.2}
             onEndReached={loadMoreDeliveries}
             keyExtractor={(item) => String(item.id)}
