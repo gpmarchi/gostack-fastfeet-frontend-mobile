@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RNCamera } from 'react-native-camera';
+import PropTypes from 'prop-types';
 
+import api from '~/services/api';
 import Background from '~/components/Background';
 
 import {
@@ -10,7 +12,6 @@ import {
   Strip,
   Signature,
   Camera,
-  CancelPreview,
   TakePicture,
   Preview,
   Snap,
@@ -18,23 +19,29 @@ import {
   SubmitButtonText,
 } from './styles';
 
-export default function ConfirmDelivery() {
+export default function ConfirmDelivery({ navigation, route }) {
+  const deliverymanId = route.params?.deliverymanId;
+  const parcelId = route.params?.parcelId;
+
   let camera;
 
   const [preview, setPreview] = useState(false);
+  const [signature, setSignature] = useState('');
 
   async function handleTakePicture() {
     if (camera) {
       setPreview(true);
-      // const options = { quality: 0.5, base64: true };
+
       const options = {
         quality: 0.5,
         orientation: 'auto',
         fixOrientation: true,
         pauseAfterCapture: true,
       };
-      const data = await camera.takePictureAsync(options);
-      console.tron.log(data);
+
+      const { uri } = await camera.takePictureAsync(options);
+
+      setSignature(uri);
     }
   }
 
@@ -43,7 +50,25 @@ export default function ConfirmDelivery() {
     camera.resumePreview();
   }
 
-  function handleConfirmDelivery() {}
+  async function handleConfirmDelivery() {
+    const data = new FormData();
+
+    const filename = signature.split('/');
+
+    data.append('file', {
+      uri: signature,
+      name: filename[filename.length - 1],
+      type: 'image/jpeg',
+    });
+
+    await api.post(
+      `/deliveryman/${deliverymanId}/deliveries/${parcelId}`,
+      data,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+
+    navigation.navigate('Dashboard');
+  }
 
   return (
     <Background>
@@ -59,6 +84,7 @@ export default function ConfirmDelivery() {
             type={RNCamera.Constants.Type.back}
             flashMode={RNCamera.Constants.FlashMode.auto}
             autoFocus={RNCamera.Constants.AutoFocus.on}
+            playSoundOnCapture
             androidCameraPermissionOptions={{
               title: 'Permission to use camera',
               message: 'We need your permission to use your camera',
@@ -94,3 +120,8 @@ ConfirmDelivery.navigationOptions = ({ navigation }) => ({
     </TouchableOpacity>
   ),
 });
+
+ConfirmDelivery.propTypes = {
+  navigation: PropTypes.shape().isRequired,
+  route: PropTypes.shape().isRequired,
+};

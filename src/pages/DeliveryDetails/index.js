@@ -119,8 +119,8 @@ export default function DeliveryDetails({ navigation, route }) {
             last
             onPress={() =>
               navigation.navigate('ConfirmDelivery', {
-                deliveryman_id: deliveryman.id,
-                parcel_id: delivery.id,
+                deliverymanId: deliveryman.id,
+                parcelId: delivery.id,
               })
             }
           >
