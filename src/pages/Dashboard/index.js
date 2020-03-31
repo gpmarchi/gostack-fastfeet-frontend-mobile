@@ -23,6 +23,7 @@ import {
   FilterLinks,
   FilterLink,
   FilterLinkText,
+  Loading,
   Deliveries,
   Delivery,
   Product,
@@ -50,15 +51,16 @@ export default function Dashboard({ navigation }) {
   const dispatch = useDispatch();
 
   const [deliveries, setDeliveries] = useState([]);
-
   const [filter, setFilter] = useState('pending');
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const deliveryman = useSelector((state) => state.auth.deliveryman);
 
   const loadDeliveries = useCallback(async () => {
     const response = await api.get(
       `/deliveryman/${deliveryman.id}/deliveries`,
-      { params: { status: filter } }
+      { params: { status: filter, page } }
     );
 
     const data = response.data.map((delivery) => ({
@@ -66,12 +68,17 @@ export default function Dashboard({ navigation }) {
       createdAtFormatted: format(parseISO(delivery.created_at), 'dd/MM/yyyy'),
     }));
 
-    setDeliveries(data);
-  }, [deliveryman.id, filter]);
+    setDeliveries(page >= 2 ? [...deliveries, ...data] : data);
+    setLoading(false);
+  }, [deliveryman.id, filter, page]);
 
   useEffect(() => {
     loadDeliveries();
-  }, [loadDeliveries]);
+  }, [loadDeliveries, filter, page]);
+
+  function loadMoreDeliveries() {
+    setPage(page + 1);
+  }
 
   function handleSignout() {
     dispatch(signOut());
@@ -108,8 +115,11 @@ export default function Dashboard({ navigation }) {
     );
   }
 
-  function handleFilter(activeFilter) {
+  function handleFilterChange(activeFilter) {
+    setLoading(true);
     setFilter(activeFilter);
+    setPage(1);
+    setDeliveries([]);
   }
 
   function handleDeliveryDetails(delivery) {
@@ -143,7 +153,7 @@ export default function Dashboard({ navigation }) {
           <FilterLinks>
             <FilterLink
               isActiveFilter={filter === 'pending'}
-              onPress={() => handleFilter('pending')}
+              onPress={() => handleFilterChange('pending')}
             >
               <FilterLinkText isActiveFilter={filter === 'pending'}>
                 Pendentes
@@ -151,7 +161,7 @@ export default function Dashboard({ navigation }) {
             </FilterLink>
             <FilterLink
               isActiveFilter={filter === 'delivered'}
-              onPress={() => handleFilter('delivered')}
+              onPress={() => handleFilterChange('delivered')}
             >
               <FilterLinkText isActiveFilter={filter === 'delivered'}>
                 Entregues
@@ -159,62 +169,72 @@ export default function Dashboard({ navigation }) {
             </FilterLink>
           </FilterLinks>
         </Filters>
-        <Deliveries
-          data={deliveries}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => (
-            <Delivery>
-              <Product>
-                <ProductInfo>
-                  <Icon name="truck-fast" size={30} color="#7D40E7" />
-                  <Description>{item.product}</Description>
-                </ProductInfo>
-                {!item.start_date && (
-                  <Withdrawal
-                    onPress={() =>
-                      handlePackagePickup(deliveryman.id, item.id, item.product)
-                    }
-                  >
-                    <Icon name="package-up" size={30} color="#7D40E7" />
-                  </Withdrawal>
-                )}
-              </Product>
-              <Status>
-                <DeliverySteps>
-                  <Waiting />
-                  <Line />
-                  <Withdrawn isComplete={item.start_date} />
-                  <Line />
-                  <Delivered isComplete={item.end_date} />
-                </DeliverySteps>
-                <Steps>
-                  <Step>
-                    <StepText>Aguardando Retirada</StepText>
-                  </Step>
-                  <Step>
-                    <StepText>Retirada</StepText>
-                  </Step>
-                  <Step>
-                    <StepText>Entregue</StepText>
-                  </Step>
-                </Steps>
-                <StatusDetails>
-                  <Info>
-                    <InfoTitle>Data</InfoTitle>
-                    <Content>{item.createdAtFormatted}</Content>
-                  </Info>
-                  <Info>
-                    <InfoTitle>Cidade</InfoTitle>
-                    <Content>{item.recipient.city}</Content>
-                  </Info>
-                  <DetailsLink onPress={() => handleDeliveryDetails(item)}>
-                    <DetailsLinkText>Ver detalhes</DetailsLinkText>
-                  </DetailsLink>
-                </StatusDetails>
-              </Status>
-            </Delivery>
-          )}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <Deliveries
+            data={deliveries}
+            onEndReachedThreshold={0.2}
+            onEndReached={loadMoreDeliveries}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item }) => (
+              <Delivery>
+                <Product>
+                  <ProductInfo>
+                    <Icon name="truck-fast" size={30} color="#7D40E7" />
+                    <Description>{item.product}</Description>
+                  </ProductInfo>
+                  {!item.start_date && (
+                    <Withdrawal
+                      onPress={() =>
+                        handlePackagePickup(
+                          deliveryman.id,
+                          item.id,
+                          item.product
+                        )
+                      }
+                    >
+                      <Icon name="package-up" size={30} color="#7D40E7" />
+                    </Withdrawal>
+                  )}
+                </Product>
+                <Status>
+                  <DeliverySteps>
+                    <Waiting />
+                    <Line />
+                    <Withdrawn isComplete={item.start_date} />
+                    <Line />
+                    <Delivered isComplete={item.end_date} />
+                  </DeliverySteps>
+                  <Steps>
+                    <Step>
+                      <StepText>Aguardando Retirada</StepText>
+                    </Step>
+                    <Step>
+                      <StepText>Retirada</StepText>
+                    </Step>
+                    <Step>
+                      <StepText>Entregue</StepText>
+                    </Step>
+                  </Steps>
+                  <StatusDetails>
+                    <Info>
+                      <InfoTitle>Data</InfoTitle>
+                      <Content>{item.createdAtFormatted}</Content>
+                    </Info>
+                    <Info>
+                      <InfoTitle>Cidade</InfoTitle>
+                      <Content>{item.recipient.city}</Content>
+                    </Info>
+                    <DetailsLink onPress={() => handleDeliveryDetails(item)}>
+                      <DetailsLinkText>Ver detalhes</DetailsLinkText>
+                    </DetailsLink>
+                  </StatusDetails>
+                </Status>
+              </Delivery>
+            )}
+          />
+        )}
       </Container>
     </Background>
   );
