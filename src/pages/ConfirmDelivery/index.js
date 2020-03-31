@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RNCamera } from 'react-native-camera';
+import ImageResizer from 'react-native-image-resizer';
 import PropTypes from 'prop-types';
 
 import api from '~/services/api';
@@ -53,11 +54,19 @@ export default function ConfirmDelivery({ navigation, route }) {
   async function handleConfirmDelivery() {
     const data = new FormData();
 
-    const filename = signature.split('/');
+    const resizedImage = await ImageResizer.createResizedImage(
+      signature,
+      500,
+      300,
+      'JPEG',
+      100,
+      0,
+      null
+    );
 
     data.append('file', {
-      uri: signature,
-      name: filename[filename.length - 1],
+      uri: resizedImage.uri,
+      name: resizedImage.name,
       type: 'image/jpeg',
     });
 
