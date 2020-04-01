@@ -47,6 +47,8 @@ import {
   DetailsLinkText,
 } from './styles';
 
+const limit = 10;
+
 export default function Dashboard({ navigation }) {
   const dispatch = useDispatch();
 
@@ -61,7 +63,7 @@ export default function Dashboard({ navigation }) {
   const loadDeliveries = useCallback(async () => {
     const response = await api.get(
       `/deliveryman/${deliveryman.id}/deliveries`,
-      { params: { status: filter, page } }
+      { params: { status: filter, page, limit } }
     );
 
     const data = response.data.map((delivery) => ({
