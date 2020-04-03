@@ -184,6 +184,8 @@ export const StatusDetails = styled.View`
   padding: 20px;
   background: #f8f9fd;
   margin-top: 20px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 `;
 
 export const Info = styled.View``;
