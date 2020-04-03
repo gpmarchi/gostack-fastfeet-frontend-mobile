@@ -9,6 +9,7 @@ export const Container = styled.View`
 export const Strip = styled.SafeAreaView`
   height: 100px;
   background: #7d40e7;
+  margin-top: -1px;
 `;
 
 export const ProblemInput = styled.TextInput.attrs({
