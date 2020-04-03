@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isWithinInterval } from 'date-fns';
 import { Alert, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -87,7 +87,6 @@ export default function Dashboard({ navigation }) {
   function refreshList() {
     setLoading(true);
     setRefreshing(true);
-    setFilter('pending');
     setPage(1);
     setDeliveries([]);
     loadDeliveries();
@@ -97,35 +96,55 @@ export default function Dashboard({ navigation }) {
     dispatch(signOut());
   }
 
-  function handlePackagePickup(deliverymanId, parcelId, product) {
-    Alert.alert(
-      `${product}`,
-      'Deseja efetivar a retirada do produto?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: async () => {
-            const response = await api.post(
-              `/deliveryman/${deliverymanId}/pickups/${parcelId}`
-            );
-
-            setDeliveries(
-              deliveries.map((delivery) => {
-                if (delivery.id === parcelId) {
-                  return { ...delivery, start_date: response.data.start_date };
-                }
-                return delivery;
-              })
-            );
-          },
-        },
-      ],
-      { cancelable: false }
+  async function packagePickup(deliverymanId, parcelId) {
+    const response = await api.post(
+      `/deliveryman/${deliverymanId}/pickups/${parcelId}`
     );
+
+    setDeliveries(
+      deliveries.map((delivery) => {
+        if (delivery.id === parcelId) {
+          return { ...delivery, start_date: response.data.start_date };
+        }
+        return delivery;
+      })
+    );
+  }
+
+  function handlePackagePickup(deliverymanId, parcelId, product) {
+    const workDayStart = new Date().setHours(8, 0, 0, 0);
+    const workDayEnd = new Date().setHours(18, 0, 0, 0);
+
+    if (
+      isWithinInterval(new Date(), { start: workDayStart, end: workDayEnd })
+    ) {
+      Alert.alert(
+        `${product}`,
+        'Deseja efetivar a retirada do produto?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => packagePickup(deliverymanId, parcelId),
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      Alert.alert(
+        'Retirada não permitida',
+        'Somente são permitidas retiradas de entregas das 08:00 às 18:00.',
+        [
+          {
+            text: 'OK',
+          },
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   function handleFilterChange(activeFilter) {
