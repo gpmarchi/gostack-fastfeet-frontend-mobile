@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, StatusBar } from 'react-native';
+import { TouchableOpacity, StatusBar, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RNCamera } from 'react-native-camera';
+// eslint-disable-next-line import/no-unresolved
 import ImageResizer from 'react-native-image-resizer';
 import PropTypes from 'prop-types';
 
@@ -52,31 +53,58 @@ export default function ConfirmDelivery({ navigation, route }) {
   }
 
   async function handleConfirmDelivery() {
-    const data = new FormData();
+    if (signature) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
 
-    const resizedImage = await ImageResizer.createResizedImage(
-      signature,
-      500,
-      300,
-      'JPEG',
-      100,
-      0,
-      null
-    );
+      const resizedImage = await ImageResizer.createResizedImage(
+        signature,
+        500,
+        300,
+        'JPEG',
+        100,
+        0,
+        null
+      );
 
-    data.append('file', {
-      uri: resizedImage.uri,
-      name: resizedImage.name,
-      type: 'image/jpeg',
-    });
+      data.append('file', {
+        uri: resizedImage.uri,
+        name: resizedImage.name,
+        type: 'image/jpeg',
+      });
 
-    await api.post(
-      `/deliveryman/${deliverymanId}/deliveries/${parcelId}`,
-      data,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
+      try {
+        await api.post(
+          `/deliveryman/${deliverymanId}/deliveries/${parcelId}`,
+          data,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
 
-    navigation.navigate('Dashboard');
+        navigation.navigate('Dashboard');
+      } catch (error) {
+        Alert.alert(
+          'Operação não permitida',
+          error.response.data.error,
+          [
+            {
+              text: 'OK',
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    } else {
+      Alert.alert(
+        'Operação não permitida',
+        'É obrigatório o envio da assinatura do destinatário para finalizar a entrega.',
+        [
+          {
+            text: 'OK',
+          },
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   return (
@@ -95,10 +123,10 @@ export default function ConfirmDelivery({ navigation, route }) {
             autoFocus={RNCamera.Constants.AutoFocus.on}
             playSoundOnCapture
             androidCameraPermissionOptions={{
-              title: 'Permission to use camera',
-              message: 'We need your permission to use your camera',
+              title: 'Permissão para usar a câmera',
+              message: 'Precisamos de sua permissão para usar a câmera',
               buttonPositive: 'Ok',
-              buttonNegative: 'Cancel',
+              buttonNegative: 'Cancelar',
             }}
           />
           <TakePicture>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, StatusBar } from 'react-native';
+import { TouchableOpacity, StatusBar, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
 
@@ -20,8 +20,23 @@ export default function NotifyProblem({ navigation, route }) {
   const [problem, setProblem] = useState('');
 
   async function handleAddProblem() {
-    await api.post(`/delivery/${parcel_id}/problems`, { description: problem });
-    navigation.goBack();
+    try {
+      await api.post(`/delivery/${parcel_id}/problems`, {
+        description: problem,
+      });
+      navigation.goBack();
+    } catch (error) {
+      Alert.alert(
+        'Operação não permitida',
+        error.response.data.error,
+        [
+          {
+            text: 'OK',
+          },
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   return (
