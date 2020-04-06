@@ -9,13 +9,13 @@ O aplicativo foi desenvolvido utilizando como base a plataforma Android em dispo
 Abaixo seguem as tecnologias utilizadas no desenvolvimento do projeto:
 
 - React Native
-- date-fns
+- React Navigation 5.x
 - Reactotron
-- Styled components
 - Redux
 - Redux saga
-- React Navigation 5.x
-- Axios
+- axios
+- date-fns
+- styled components
 
 ## Requisitos iniciais
 
