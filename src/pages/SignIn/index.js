@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, ActivityIndicator } from 'react-native';
+import { Image, ActivityIndicator, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { signInRequest } from '~/store/modules/auth/actions';
@@ -27,6 +27,7 @@ export default function SignIn() {
 
   return (
     <Container>
+      <StatusBar barStyle="light-content" backgroundColor="#7d40e7" />
       <Image source={logo} height={48} width={244} />
       <Form>
         <Input
