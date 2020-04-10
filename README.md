@@ -4,6 +4,10 @@ Projeto desenvolvido como exercício para certificação do Bootcamp Gostack 10 
 
 O aplicativo foi desenvolvido utilizando como base a plataforma Android em dispositivo físico. O código ainda não foi testado em iOS.
 
+<div align="center">
+    <img alt="FastFeet" title="FastFeet" src=".github/fastfeet-mobile.gif" />
+</div>
+
 ## Tecnologias e libs utilizadas
 
 Abaixo seguem as tecnologias utilizadas no desenvolvimento do projeto:
