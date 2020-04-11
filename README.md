@@ -41,6 +41,12 @@ Rodar o comando abaixo para instalar as dependências:
 
     yarn
 
+## Configuração
+
+Será necessário configurar o endereço onde o servidor da API estiver rodando. Para isso editar o arquivo `src/services/api.js`, informando na propriedade `baseURL` o endereço correto de acesso à API:
+
+    baseURL: 'http://<endereço ip>:<porta>'
+
 ## Rodando o projeto
 
 A partir desse momento o ambiente já está preparado para rodarmos o app. Para iniciar o bundler rodar o comando:
