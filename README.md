@@ -28,8 +28,12 @@ Para poder rodar o projeto, é necessário que os itens abaixo estejam instalado
 - [Node.js](https://nodejs.org/en/download/)
 - [npm](https://www.npmjs.com/get-npm) ou [yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable)
 - [git](https://git-scm.com/downloads)
+- [Android Studio](https://developer.android.com/studio)
+- [JDK8](https://www.oracle.com/java/technologies/javase-jdk8-downloads.html)
 
 Também será necessário que o back-end da aplicação esteja rodando para que o app mobile acesse as rotas da API.
+
+Para maiores informações sobre como preparar o seu ambiente para rodar projetos baseados em React Native, acessar a documentação da [Rocketseat](https://react-native.rocketseat.dev/).
 
 ## Instalação
 
@@ -53,9 +57,15 @@ A partir desse momento o ambiente já está preparado para rodarmos o app. Para 
 
     yarn start
 
-Com o bundler rodando, agora será necessário instalar o app no seu emulador ou dispositivo físico, rodando o comando abaixo:
+Com o bundler rodando, agora será necessário instalar o app no seu emulador ou dispositivo físico. Com o emulador rodando ou o dispositivo físico conectado via USB, rodar o comando:
 
-    yarn android
+    adb reverse tcp:8081 tpc:8081 && yarn android
+
+Após instalado o app no dispositivo físico, se desejar emular o app pela rede sem fio será necessário acessar o **Developer Menu** chacoalhando o dispositivo e acessar **Dev Settings** e selecionar a opção **Debug server host & port for device** para informar o ip e porta da sua máquina de desenvolvimento (<ip da máquina>:8081)
+
+Caso tenha problemas para acessar as rotas da API pelo dispositivo, rodar o comando abaixo:
+
+    adb reverse tcp:<porta da api> tpc:<porta da api>
 
 ## Testando as funcionalidades
 
