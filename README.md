@@ -59,13 +59,13 @@ A partir desse momento o ambiente já está preparado para rodarmos o app. Para 
 
 Com o bundler rodando, agora será necessário instalar o app no seu emulador ou dispositivo físico. Com o emulador rodando ou o dispositivo físico conectado via USB, rodar o comando:
 
-    adb reverse tcp:8081 tpc:8081 && yarn android
+    adb reverse tcp:8081 tcp:8081 && yarn android
 
 Após instalado o app no dispositivo físico, se desejar emular o app pela rede sem fio será necessário acessar o **Developer Menu** chacoalhando o dispositivo e acessar **Dev Settings** e selecionar a opção **Debug server host & port for device** para informar o ip e porta da sua máquina de desenvolvimento (<ip da máquina>:8081)
 
 Caso tenha problemas para acessar as rotas da API pelo dispositivo, rodar o comando abaixo:
 
-    adb reverse tcp:<porta da api> tpc:<porta da api>
+    adb reverse tcp:<porta da api> tcp:<porta da api>
 
 ## Testando as funcionalidades
 
